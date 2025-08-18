@@ -1,0 +1,366 @@
+services:
+
+  bookingDb:
+    image: mysql
+    container_name: bookingDb
+    ports:
+      - 3301:3306
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bookingDb
+    networks:
+      - microservices
+
+  categorydb:
+    image: mysql
+    container_name: categorydb
+    ports:
+      - 3302:3306
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: categorydb
+    networks:
+      - microservices
+
+  saloonuser:
+    image: mysql
+    container_name: saloonuser
+    ports:
+      - 3303:3306
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: saloonuser
+    networks:
+      - microservices
+
+
+  saloonDb:
+    image: mysql
+    container_name: saloonDb
+    ports:
+      - 3304:3306
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: saloonDb
+    networks:
+      - microservices
+
+  saloonServiceDB:
+    image: mysql
+    container_name: saloonServiceDB
+    ports:
+      - 3305:3306
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: saloonServiceDB
+    networks:
+      - microservices
+
+  paymentDB:
+    image: mysql
+    container_name: paymentDB
+    ports:
+      - 3307:3306
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: paymentDB
+    networks:
+      - microservices
+
+
+
+
+
+
+  eurekaserver:
+    image: "harintharan/saloon-eureka-server:v1"
+    ports:
+      - "8088:8088"
+    healthcheck:
+      test: ["CMD-SHELL","curl --fail --silent eurekaserver:8080/actuator/health/readiness | grep UP || exist 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name:  eurekaserver
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+
+
+  user:
+    image: "harintharan/saloon-user:v1"
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: "curl --fail --silent user:8082/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: user
+    depends_on:
+      saloonuser:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "user-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://saloonuser:3306/saloonuser"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+  booking:
+    image: "harintharan/saloon-booking-service:v1"
+    ports:
+      - "8086:8086"
+    healthcheck:
+      test: "curl --fail --silent booking:8086/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: booking
+    depends_on:
+      bookingDb:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "Booking-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://bookingDb:3306/bookingDb"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+  catagary:
+    image: "harintharan/saloon-catagary-service:v1"
+    ports:
+      - "8084:8084"
+    healthcheck:
+      test: "curl --fail --silent catagary:8084/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: catagary
+    depends_on:
+      categorydb:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "category-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://categorydb:3306/categorydb"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+
+  payment:
+    image: "harintharan/saloon-payment-service:v1"
+    ports:
+      - "8087:8087"
+    healthcheck:
+      test: "curl --fail --silent payment:8084/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: payment
+    depends_on:
+      paymentDB:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "payment-microservice"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://paymentDB:3306/paymentDB"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+
+  saloon:
+    image: "harintharan/saloon-service:v1"
+    ports:
+      - "8083:8083"
+    healthcheck:
+      test: "curl --fail --silent saloon:8083/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: saloon
+    depends_on:
+      saloonDb:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "saloon-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://saloonDb:3306/saloonDb"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+
+  serviceoffering:
+    image: "harintharan/saloon-service-offering:v1"
+    ports:
+      - "8085:8085"
+    healthcheck:
+      test: "curl --fail --silent serviceoffering:8085/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: serviceoffering
+    depends_on:
+      saloonServiceDB:
+        condition: service_healthy
+
+    environment:
+      SPRING_APPLICATION_NAME: "service-offering"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://saloonServiceDB:3306/saloonServiceDB"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+  gatewayserver:
+    image: "harintharan/saloon-gateway-server:v1"
+    ports:
+      - "8089:8089"
+    healthcheck:
+      test: "curl --fail --silent gatewayserver:8089/actuator/health/readiness | grep UP || exist 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: gatewayserver
+
+
+    environment:
+      SPRING_APPLICATION_NAME: "gateway-server"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+
+
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+
+    networks:
+      - microservices
+
+networks:
+    microservices:
+      driver: "bridge"
+

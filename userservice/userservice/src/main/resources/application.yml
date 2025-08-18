@@ -1,0 +1,46 @@
+#spring.application.name=user-service
+#server.port=8082
+#
+#
+##mysql configuration
+#
+#spring.jpa.hibernate.ddl-auto=update
+#spring.datasource.url=jdbc:mysql://localhost:3306/saloonuser
+#spring.datasource.username=root
+#spring.datasource.password=HA1256ri#
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.jpa.show-sql: true
+
+#keycloak:
+#  client:
+#    id: saloon-booking-client
+#    secret: AR4Ttj1rgBNUBkqU0iZGJuOpDhIDaSoF
+#  admin:
+#    username: adminnan
+#    password: admin
+
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/saloonuser?createDatabaseIfNotExist=true
+    username: root
+    password: HA1256ri#
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8082
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    service-url:
+      defaultZone: "http://localhost:8088/eureka/"

@@ -16,7 +16,7 @@
 
 spring:
   application:
-    name: Booking-service
+    name: booking-service
 
   datasource:
     url: jdbc:mysql://localhost:3306/bookingDb?createDatabaseIfNotExist=true

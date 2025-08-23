@@ -136,7 +136,7 @@ public class KeycloakAuthController {
 
     private final String KEYCLOAK_TOKEN_URL = "http://localhost:8090/realms/master/protocol/openid-connect/token";
     private final String CLIENT_ID = "saloon-booking-client";
-    private final String CLIENT_SECRET = "fbE11dpIzGZPER1M1NqO3jM9uOyZbSVT";
+    private final String CLIENT_SECRET = "WbASFbWUku4XYLJEOjpCKOHLUjzpGucr";
 
     @PostMapping("/token")
     public ResponseEntity<String> getToken(@RequestParam String username, @RequestParam String password) throws Exception {

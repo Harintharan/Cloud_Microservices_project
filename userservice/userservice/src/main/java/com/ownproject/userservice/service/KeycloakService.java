@@ -24,14 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KeycloakService {
 
-    private static final String KEYCLOAK_BASE_URL = "http://localhost:3333";
+    private static final String KEYCLOAK_BASE_URL = "http://keycloak:8080";
     private static final String KEYCLOAK_ADMIN_API=KEYCLOAK_BASE_URL +"/admin/realms/master/users";
 
 
     private static final String TOKEN_URL= KEYCLOAK_BASE_URL+"/realms/master/protocol/openid-connect/token";
 
     private static final String  CLIENT_ID="saloon-booking-client";
-    private static final String CLIENT_SECRET="klZdJDCzRjzCtDyD0kA6brtvtwja5ZmA";
+    private static final String CLIENT_SECRET="WbASFbWUku4XYLJEOjpCKOHLUjzpGucr";
 
 
     private static final String GRANT_TYPE="password";
@@ -39,7 +39,7 @@ public class KeycloakService {
 
     private static final String username = "admin";
     private static final String password ="admin";
-    private static final String clientId = "040874bd-39e7-46f8-93b5-f2521e191ad4";
+    private static final String clientId = "aafce9b9-755d-42c5-8fe8-e83b5273c6a2";
 
     @Autowired
 

@@ -20,16 +20,17 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final UserFeignClient userFeignClient;
-@PostMapping("/create")
+
+    @PostMapping("/create")
     public ResponseEntity<PaymentLinkResponse> createPaymentLink(@RequestBody BookingDTO booking,
-                                                                 @RequestParam PaymentMethode paymentMethode,@RequestHeader("Authorization") String jwt) throws Exception {
+                                                                 @RequestParam PaymentMethode paymentMethode, @RequestHeader("Authorization") String jwt) throws Exception {
 
-        UserDTO user =userFeignClient.getUserProfile(jwt).getBody();
+        UserDTO user = userFeignClient.getUserProfile(jwt).getBody();
 
 
-        PaymentLinkResponse response =  paymentService.createOrder(user,booking,paymentMethode);
+        PaymentLinkResponse response = paymentService.createOrder(user, booking, paymentMethode);
 
-        return  ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);
     }
 
 
@@ -37,11 +38,9 @@ public class PaymentController {
     public ResponseEntity<PaymentOrder> getPaymentOrderById(@PathVariable Long paymentOrderId) throws Exception {
 
 
+        PaymentOrder paymentOrder = paymentService.getPaymentOrderById(paymentOrderId);
 
-
-        PaymentOrder paymentOrder =  paymentService.getPaymentOrderById(paymentOrderId);
-
-        return  ResponseEntity.ok(paymentOrder);
+        return ResponseEntity.ok(paymentOrder);
     }
 
 
@@ -49,32 +48,14 @@ public class PaymentController {
     public ResponseEntity<Boolean> proceedPayment(@RequestParam String paymentId, @RequestParam String paymentLinkId) throws Exception {
 
 
-    PaymentOrder paymentOrder = paymentService.getPaymentOrderByPaymentId(paymentLinkId);
+        PaymentOrder paymentOrder = paymentService.getPaymentOrderByPaymentId(paymentLinkId);
 
-    Boolean response = paymentService.proceedPayment(paymentOrder,paymentId,paymentLinkId);
+        Boolean response = paymentService.proceedPayment(paymentOrder, paymentId, paymentLinkId);
 
-    return ResponseEntity.ok(response);
-
-
-
-
-
-
-
-
-
-
+        return ResponseEntity.ok(response);
 
 
     }
-
-
-
-
-
-
-
-
 
 
 }

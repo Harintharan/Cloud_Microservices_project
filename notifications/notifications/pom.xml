@@ -116,7 +116,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>harintharan/notifications:v1</image>
+						<image>harintharan/saloon-notifications-service:v2</image>
 					</to>
 				</configuration>
 			</plugin>

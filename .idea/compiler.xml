@@ -19,9 +19,6 @@
         <module name="service-offering" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="saloon-offering-service" target="21" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -32,7 +29,6 @@
       <module name="gateway-server" options="-parameters" />
       <module name="notifications" options="-parameters" />
       <module name="paymentMicroserviceforsaloonProject" options="-parameters" />
-      <module name="saloon-offering-service" options="-parameters" />
       <module name="saloon-service" options="-parameters" />
       <module name="service-offering" options="-parameters" />
       <module name="userservice" options="-parameters" />

@@ -27,6 +27,7 @@ jobs:
       - name: Build and push userservice
         run: |
           cd userservice
+          chmod +x mvnw
           ./mvnw clean package -DskipTests
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/userservice:${{ github.sha }} .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/userservice:${{ github.sha }}

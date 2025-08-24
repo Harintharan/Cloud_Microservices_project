@@ -1,0 +1,132 @@
+version: "3.9"
+
+services:
+  # ----------------- MySQL -----------------
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../init-scripts:/docker-entrypoint-initdb.d        # 👈 init scripts mounted here
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks: [ microservices ]
+
+  # ----------------- Eureka -----------------
+  eurekaserver:
+    image: "harintharan/saloon-eureka-server:v2"
+    container_name: eurekaserver
+    ports:
+      - "8088:8088"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail --silent http://eurekaserver:8088/actuator/health | grep UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks: [ microservices ]
+
+
+  # ----------------- Keycloak -----------------
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.0
+    container_name: keycloak
+    command: start-dev --health-enabled=true --metrics-enabled=true --http-enabled=true --hostname-strict=false
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_MANAGEMENT_HOST: 0.0.0.0
+      KC_MANAGEMENT_PORT: 9000
+    restart: always
+    ports:
+      - "3333:8080"    # main http
+      - "9000:9000"    # mgmt/health
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:9000/health/ready || exit 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    networks:
+      - microservices
+
+    # ----------------- User Service -----------------
+  user:
+    image: "harintharan/saloon-user:v2"
+    container_name: user
+    restart: always
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: user-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks: [ microservices ]
+
+  # ----------------- API Gateway -----------------
+  gateway:
+    image: "harintharan/saloon-gateway-server:v2"
+    container_name: gateway
+    restart: always
+    ports:
+      - "8089:8089"
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      keycloak:
+        condition: service_started   # 👈 only wait for container to start, not health
+    environment:
+      SPRING_APPLICATION_NAME: gateway-service
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: master
+      KEYCLOAK_RESOURCE: gateway-client
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - microservices
+
+
+# ----------------- Volumes -----------------
+volumes:
+  mysql_data:
+  keycloak_data:
+
+
+# ----------------- Network -----------------
+networks:
+  microservices:
+    driver: bridge

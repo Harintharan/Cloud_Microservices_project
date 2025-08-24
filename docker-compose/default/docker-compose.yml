@@ -1,188 +1,6 @@
 version: "3.9"
 
 services:
-  # ----------------- Databases -----------------
-#  bookingdb:
-#    image: mysql:8
-#    container_name: bookingdb
-#    ports:
-#      - "3301:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: bookingdb
-#    volumes:
-#      - bookingdb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#  paymentdb:
-#    image: mysql:8
-#    container_name: paymentdb
-#    ports:
-#      - "3302:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: paymentdb
-#    volumes:
-#      - paymentdb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#  notificationdb:
-#    image: mysql:8
-#    container_name: notificationdb
-#    ports:
-#      - "3303:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: notificationdb
-#    volumes:
-#      - notificationdb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#  userdb:
-#    image: mysql:8
-#    container_name: userdb
-#    ports:
-#      - "3304:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: userdb
-#    volumes:
-#      - userdb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#
-#
-#  categorydb:
-#    image: mysql:8
-#    container_name: categorydb
-#    ports:
-#      - "3305:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: categorydb
-#    volumes:
-#      - categorydb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#  reviewdb:
-#    image: mysql:8
-#    container_name: reviewdb
-#    ports:
-#      - "3307:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: reviewdb
-#    volumes:
-#      - reviewdb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#  saloonservicedb:
-#    image: mysql:8
-#    container_name: saloonservicedb
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: saloonServiceDB
-#
-#    ports:
-#      - "3311:3306"
-#    volumes:
-#      - saloonservicedb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-#
-#  saloondb:
-#    image: mysql:8
-#    container_name: saloondb
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_DATABASE: saloonDb
-#    ports:
-#      - "3310:3306"
-#    volumes:
-#      - saloondb_data:/var/lib/mysql
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 10s
-#    networks: [ microservices ]
-
-
-#  mysql:
-#    image: mysql:8.0
-#    container_name: saloon-mysql
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#    ports:
-#      - "3307:3306"
-#    volumes:
-#      - saloon_mysql_data:/var/lib/mysql
-#    command: >
-#      bash -c "
-#      exec docker-entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password &
-#      sleep 20 &&
-#      mysql -uroot -proot -e '
-#        CREATE DATABASE IF NOT EXISTS bookingdb;
-#        CREATE DATABASE IF NOT EXISTS paymentdb;
-#        CREATE DATABASE IF NOT EXISTS userdb;
-#        CREATE DATABASE IF NOT EXISTS notificationdb;
-#        CREATE DATABASE IF NOT EXISTS categorydb;
-#        CREATE DATABASE IF NOT EXISTS reviewdb;
-#        CREATE DATABASE IF NOT EXISTS saloonDb;
-#        CREATE DATABASE IF NOT EXISTS saloonServiceDB;
-#      ' &&
-#      wait
-#      "
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#      start_period: 20s
-#    networks: [ microservices ]
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -287,207 +105,210 @@ services:
 
 
 
-  # ----------------- Microservices -----------------
-  booking:
-    image: "harintharan/saloon-booking-service:v2"
-    container_name: booking
-    ports:
-      - "8086:8086"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: booking-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookingdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: guest
-      SPRING_RABBITMQ_PASSWORD: guest
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
+#  # ----------------- Microservices -----------------
+#  booking:
+#    image: "harintharan/saloon-booking-service:v2"
+#    container_name: booking
+#    ports:
+#      - "8086:8086"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: booking-service
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookingdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_RABBITMQ_PORT: 5672
+#      SPRING_RABBITMQ_USERNAME: guest
+#      SPRING_RABBITMQ_PASSWORD: guest
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
+#
+#  payment:
+#    image: "harintharan/saloon-payment-service:v2"
+#    container_name: payment
+#    ports:
+#      - "8087:8087"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: payment-microservice
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/paymentdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_RABBITMQ_PORT: 5672
+#      SPRING_RABBITMQ_USERNAME: guest
+#      SPRING_RABBITMQ_PASSWORD: guest
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
+#
+#
+#  notification:
+#    image: "harintharan/saloon-notifications-service:v2"
+#    container_name: notification
+#    ports:
+#      - "9001:9001"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: notifications-service
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/notificationdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_RABBITMQ_PORT: 5672
+#      SPRING_RABBITMQ_USERNAME: guest
+#      SPRING_RABBITMQ_PASSWORD: guest
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
+#
+#
+#  category:
+#    image: "harintharan/saloon-catagary-service:v2"
+#    container_name: category
+#    ports:
+#      - "8084:8084"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: category-service
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/categorydb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
+#
+#
+#
+#
+#  review:
+#    image: "harintharan/saloon-review-service:v2"
+#    container_name: review
+#    ports:
+#      - "9002:9002"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: review-microservice
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/reviewdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
+#
+#
+#  saloon-service:
+#    image: "harintharan/saloon-service:v2"
+#    container_name: saloon-service
+#    ports:
+#      - "8083:8083"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: saloon-service
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saloonDb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
+#
+#
+#  service-offering:
+#    image: "harintharan/saloon-service-offering:v2"
+#    container_name: service-offering
+#    ports:
+#      - "8085:8085"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: service-offering
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saloonServiceDB
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
 
-  payment:
-    image: "harintharan/saloon-payment-service:v2"
-    container_name: payment
-    ports:
-      - "8087:8087"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: payment-microservice
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/paymentdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: guest
-      SPRING_RABBITMQ_PASSWORD: guest
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
-
-
-  notification:
-    image: "harintharan/saloon-notifications-service:v2"
-    container_name: notification
-    ports:
-      - "9001:9001"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: notifications-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/notificationdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: guest
-      SPRING_RABBITMQ_PASSWORD: guest
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
-
-
-  category:
-    image: "harintharan/saloon-catagary-service:v2"
-    container_name: category
-    ports:
-      - "8084:8084"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: category-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/categorydb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
 
 
 
-
-  review:
-    image: "harintharan/saloon-review-service:v2"
-    container_name: review
-    ports:
-      - "9002:9002"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: review-microservice
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/reviewdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
-
-
-  saloon-service:
-    image: "harintharan/saloon-service:v2"
-    container_name: saloon-service
-    ports:
-      - "8083:8083"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: saloon-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saloonDb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
-
-
-  service-offering:
-    image: "harintharan/saloon-service-offering:v2"
-    container_name: service-offering
-    ports:
-      - "8085:8085"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: service-offering
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saloonServiceDB
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
-
-  user:
-    image: "harintharan/saloon-user:v2"
-    container_name: user
-    ports:
-      - "8082:8082"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: user-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks: [ microservices ]
+#  user:
+#    image: "harintharan/saloon-user:v2"
+#    container_name: user
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eurekaserver:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: user-service
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 700m
+#    networks: [ microservices ]
 
 
 

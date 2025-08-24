@@ -18,7 +18,8 @@
     <file url="file://$PROJECT_DIR$/saloon-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-offering/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-offering/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/userservice/userservice/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/userservice/userservice/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/userservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/userservice1/userservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/userservice1/userservice/src/main/resources" charset="UTF-8" />
   </component>
 </project>

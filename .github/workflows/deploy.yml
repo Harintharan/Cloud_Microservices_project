@@ -1,112 +1,18 @@
-#name: Build and Push Docker Images
-#
-#on:
-#  push:
-#    branches: [ v_t_1.0 ]
-#
-#jobs:
-#  build-and-push:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Set up JDK 21
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '21'
-#          distribution: 'temurin'
-#
-#      - name: Log in to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-#
-#      - name: Build and push userservice
-#        run: |
-#          cd userservice
-#          chmod +x mvnw
-#          ./mvnw clean package -DskipTests
-#          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/userservice:${{ github.sha }} .
-#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/userservice:${{ github.sha }}
-#
-#      - name: Build and push gateway-server
-#        run: |
-#          cd gateway-server
-#          chmod +x mvnw
-#          ./mvnw clean package -DskipTests
-#          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gateway-server:${{ github.sha }} .
-#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gateway-server:${{ github.sha }}
-#
-#      - name: Build and push eureka
-#        run: |
-#          cd eureka
-#          chmod +x mvnw
-#          ./mvnw clean package -DskipTests
-#          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/eureka:${{ github.sha }} .
-#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/eureka:${{ github.sha }}
-#
-##      - name: Build and push paymentMicroserviceforsaloonProject
-##        run: |
-##          cd paymentMicroserviceforsaloonProject
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/payment:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/payment:${{ github.sha }}
-##
-##      - name: Build and push ReviewMicroservice
-##        run: |
-##          cd ReviewMicroservice
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/review:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/review:${{ github.sha }}
-##
-##      - name: Build and push saloon-service
-##        run: |
-##          cd saloon-service
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/saloon:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saloon:${{ github.sha }}
-##
-##      - name: Build and push service-offering
-##        run: |
-##          cd service-offering
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/service-offering:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/service-offering:${{ github.sha }}
-##
-##      - name: Build and push Bookingservice
-##        run: |
-##          cd Bookingservice
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/booking:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/booking:${{ github.sha }}
-##
-##      - name: Build and push categary-service
-##        run: |
-##          cd categary-service
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/categary:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/categary:${{ github.sha }}
-##
-##      - name: Build and push notifications
-##        run: |
-##          cd notifications
-##          ./mvnw clean package -DskipTests
-##          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/notifications:${{ github.sha }} .
-##          docker push ${{ secrets.DOCKERHUB_USERNAME }}/notifications:${{ github.sha }}
+name: Test SSH connection to Azure VM
 
+on:
+  workflow_dispatch:
 
-
-#name: Do Nothing
-#
-#on:
-#  workflow_dispatch:
-#
-#jobs:
-#  noop:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: No operation
-#        run: echo "This workflow does nothing."
+jobs:
+  test-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test SSH connection to Azure VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_VM_SSH_KEY }}   # private key content
+          port: 22
+          script: |
+            echo "hello from GitHub Actions"

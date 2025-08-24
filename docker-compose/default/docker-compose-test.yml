@@ -10,8 +10,8 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ../init-scripts:/docker-entrypoint-initdb.d        # 👈 init scripts mounted here
+      - mysql_data_v1:/var/lib/mysql
+      - ../init-scripts:/docker-entrypoint-initdb.d
     restart: always
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
@@ -19,11 +19,11 @@ services:
       timeout: 5s
       retries: 10
       start_period: 20s
-    networks: [ microservices ]
+    networks: [ microservices_v1 ]
 
   # ----------------- Eureka -----------------
   eurekaserver:
-    image: "harintharan/saloon-eureka-server:v2"
+    image: "thayanan/eureka"
     container_name: eurekaserver
     ports:
       - "8088:8088"
@@ -38,7 +38,7 @@ services:
       resources:
         limits:
           memory: 700m
-    networks: [ microservices ]
+    networks: [ microservices_v1 ]
 
 
   # ----------------- Keycloak -----------------
@@ -60,19 +60,18 @@ services:
       - "3333:8080"    # main http
       - "9000:9000"    # mgmt/health
     volumes:
-      - keycloak_data:/opt/keycloak/data
+      - keycloak_data_v1:/opt/keycloak/data
     healthcheck:
       test: [ "CMD-SHELL", "curl -fsS http://localhost:9000/health/ready || exit 1" ]
       interval: 15s
       timeout: 5s
       retries: 20
       start_period: 60s
-    networks:
-      - microservices
+    networks: [ microservices_v1 ]
 
     # ----------------- User Service -----------------
   user:
-    image: "harintharan/saloon-user:v2"
+    image: "thayanan/userservice"
     container_name: user
     restart: always
     ports:
@@ -82,21 +81,30 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
+    env_file:
+      - ../../.env
     environment:
       SPRING_APPLICATION_NAME: user-service
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+      KEYCLOAK_BASE_URL: http://keycloak:8080
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_UUID: ${KEYCLOAK_CLIENT_UUID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
     deploy:
       resources:
         limits:
           memory: 700m
-    networks: [ microservices ]
+    networks: [ microservices_v1 ]
 
   # ----------------- API Gateway -----------------
   gateway:
-    image: "harintharan/saloon-gateway-server:v2"
+    image: "thayanan/gateway-server"
     container_name: gateway
     restart: always
     ports:
@@ -116,17 +124,16 @@ services:
       resources:
         limits:
           memory: 700m
-    networks:
-      - microservices
+    networks: [ microservices_v1 ]
 
 
 # ----------------- Volumes -----------------
 volumes:
-  mysql_data:
-  keycloak_data:
+  mysql_data_v1:
+  keycloak_data_v1:
 
 
 # ----------------- Network -----------------
 networks:
-  microservices:
+  microservices_v1:
     driver: bridge

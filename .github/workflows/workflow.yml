@@ -1,0 +1,7 @@
+- name: Test SSH connection to Azure VM
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{ secrets.AZURE_VM_IP }}
+    username: ${{ secrets.AZURE_VM_USER }}
+    key: ${{ secrets.AZURE_VM_SSH_KEY }}
+    script: echo "hello from GitHub Actions"

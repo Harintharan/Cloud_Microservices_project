@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/saloonuser?createDatabaseIfNotExist=true
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8082
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    service-url:
+      defaultZone: "http://localhost:8088/eureka/"
+
+keycloak:
+  base-url: http://localhost:8080
+  admin-username: admin
+  admin-password: admin
+  client-id: saloon-booking-client
+  client-uuid: d87972a2-f2db-4c15-bf01-dd249af426d9
+  client-secret: Rb4iVxtzp2vQl16gPs3DBbT5yl2nOKqW
+  realm: master
+

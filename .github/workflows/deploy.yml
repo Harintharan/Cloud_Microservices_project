@@ -16,4 +16,4 @@ jobs:
           key: ${{ secrets.AZURE_VM_SSH_KEY }}   # private key content
           port: 22
           script: |
-            echo "hello from GitHub Actions"
+            echo "Hello, world!" > hello.txt

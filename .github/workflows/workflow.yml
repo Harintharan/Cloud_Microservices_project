@@ -1,7 +1,18 @@
-- name: Test SSH connection to Azure VM
-  uses: appleboy/ssh-action@v1.0.3
-  with:
-    host: ${{ secrets.AZURE_VM_IP }}
-    username: ${{ secrets.AZURE_VM_USER }}
-    key: ${{ secrets.AZURE_VM_SSH_KEY }}
-    script: echo "hello from GitHub Actions"
+name: Test SSH connection to Azure VM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test SSH connection to Azure VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
+          key: ${{ secrets.AZURE_VM_SSH_KEY }}   # private key content
+          port: 22
+          script: |
+            echo "hello from GitHub Actions"

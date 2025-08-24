@@ -1,366 +1,492 @@
+version: "3.9"
+
 services:
+  # ----------------- Databases -----------------
+#  bookingdb:
+#    image: mysql:8
+#    container_name: bookingdb
+#    ports:
+#      - "3301:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: bookingdb
+#    volumes:
+#      - bookingdb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#  paymentdb:
+#    image: mysql:8
+#    container_name: paymentdb
+#    ports:
+#      - "3302:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: paymentdb
+#    volumes:
+#      - paymentdb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#  notificationdb:
+#    image: mysql:8
+#    container_name: notificationdb
+#    ports:
+#      - "3303:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: notificationdb
+#    volumes:
+#      - notificationdb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#  userdb:
+#    image: mysql:8
+#    container_name: userdb
+#    ports:
+#      - "3304:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: userdb
+#    volumes:
+#      - userdb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#
+#
+#  categorydb:
+#    image: mysql:8
+#    container_name: categorydb
+#    ports:
+#      - "3305:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: categorydb
+#    volumes:
+#      - categorydb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#  reviewdb:
+#    image: mysql:8
+#    container_name: reviewdb
+#    ports:
+#      - "3307:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: reviewdb
+#    volumes:
+#      - reviewdb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#  saloonservicedb:
+#    image: mysql:8
+#    container_name: saloonservicedb
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: saloonServiceDB
+#
+#    ports:
+#      - "3311:3306"
+#    volumes:
+#      - saloonservicedb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
+#
+#  saloondb:
+#    image: mysql:8
+#    container_name: saloondb
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: saloonDb
+#    ports:
+#      - "3310:3306"
+#    volumes:
+#      - saloondb_data:/var/lib/mysql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 10s
+#    networks: [ microservices ]
 
-  bookingDb:
-    image: mysql
-    container_name: bookingDb
+
+#  mysql:
+#    image: mysql:8.0
+#    container_name: saloon-mysql
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#    ports:
+#      - "3307:3306"
+#    volumes:
+#      - saloon_mysql_data:/var/lib/mysql
+#    command: >
+#      bash -c "
+#      exec docker-entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password &
+#      sleep 20 &&
+#      mysql -uroot -proot -e '
+#        CREATE DATABASE IF NOT EXISTS bookingdb;
+#        CREATE DATABASE IF NOT EXISTS paymentdb;
+#        CREATE DATABASE IF NOT EXISTS userdb;
+#        CREATE DATABASE IF NOT EXISTS notificationdb;
+#        CREATE DATABASE IF NOT EXISTS categorydb;
+#        CREATE DATABASE IF NOT EXISTS reviewdb;
+#        CREATE DATABASE IF NOT EXISTS saloonDb;
+#        CREATE DATABASE IF NOT EXISTS saloonServiceDB;
+#      ' &&
+#      wait
+#      "
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 20s
+#    networks: [ microservices ]
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
     ports:
-      - 3301:3306
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../init-scripts:/docker-entrypoint-initdb.d        # 👈 init scripts mounted here
     healthcheck:
-      test: ["CMD","mysqladmin","ping","-h","localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks: [ microservices ]
+
+  # ----------------- RabbitMQ -----------------
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: bookingDb
-    networks:
-      - microservices
+    networks: [ microservices ]
 
-  categorydb:
-    image: mysql
-    container_name: categorydb
-    ports:
-      - 3302:3306
-    healthcheck:
-      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: categorydb
-    networks:
-      - microservices
-
-  saloonuser:
-    image: mysql
-    container_name: saloonuser
-    ports:
-      - 3303:3306
-    healthcheck:
-      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: saloonuser
-    networks:
-      - microservices
-
-
-  saloonDb:
-    image: mysql
-    container_name: saloonDb
-    ports:
-      - 3304:3306
-    healthcheck:
-      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: saloonDb
-    networks:
-      - microservices
-
-  saloonServiceDB:
-    image: mysql
-    container_name: saloonServiceDB
-    ports:
-      - 3305:3306
-    healthcheck:
-      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: saloonServiceDB
-    networks:
-      - microservices
-
-  paymentDB:
-    image: mysql
-    container_name: paymentDB
-    ports:
-      - 3307:3306
-    healthcheck:
-      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: paymentDB
-    networks:
-      - microservices
-
-
-
-
-
-
+  # ----------------- Eureka -----------------
   eurekaserver:
-    image: "harintharan/saloon-eureka-server:v1"
+    image: "harintharan/saloon-eureka-server:v2"
+    container_name: eurekaserver
     ports:
       - "8088:8088"
     healthcheck:
-      test: ["CMD-SHELL","curl --fail --silent eurekaserver:8080/actuator/health/readiness | grep UP || exist 1"]
+      test: [ "CMD-SHELL", "curl --fail --silent http://eurekaserver:8088/actuator/health | grep UP || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
-    container_name:  eurekaserver
-
     deploy:
       resources:
         limits:
           memory: 700m
+    networks: [ microservices ]
 
+  # ----------------- Keycloak -----------------
+  #  keycloak:
+  #    image: quay.io/keycloak/keycloak:26.0.0
+  #    container_name: keycloak
+  #    command: start-dev
+  #    environment:
+  #      KEYCLOAK_ADMIN: admin
+  #      KEYCLOAK_ADMIN_PASSWORD: admin
+  #    ports:
+  #      - "3333:8080"
+  #    volumes:
+  #      - keycloak_data:/opt/keycloak/data
+  #    healthcheck:
+  #      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health/ready || exit 1"]
+  #      interval: 15s
+  #      timeout: 5s
+  #      retries: 20
+  #      start_period: 60s
+  #    networks: [microservices]
 
-    networks:
-      - microservices
-
-
-
-  user:
-    image: "harintharan/saloon-user:v1"
-    ports:
-      - "8082:8082"
-    healthcheck:
-      test: "curl --fail --silent user:8082/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: user
-    depends_on:
-      saloonuser:
-        condition: service_healthy
-
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.0
+    container_name: keycloak
+    command: start-dev --health-enabled=true --metrics-enabled=true --http-enabled=true --hostname-strict=false
     environment:
-      SPRING_APPLICATION_NAME: "user-service"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://saloonuser:3306/saloonuser"
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-
-
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_MANAGEMENT_HOST: 0.0.0.0
+      KC_MANAGEMENT_PORT: 9000
+    ports:
+      - "3333:8080"    # main http
+      - "9000:9000"    # mgmt/health
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:9000/health/ready || exit 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
     networks:
       - microservices
 
+
+
+
+  # ----------------- Microservices -----------------
   booking:
-    image: "harintharan/saloon-booking-service:v1"
+    image: "harintharan/saloon-booking-service:v2"
+    container_name: booking
     ports:
       - "8086:8086"
-    healthcheck:
-      test: "curl --fail --silent booking:8086/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: booking
     depends_on:
-      bookingDb:
+      mysql:
         condition: service_healthy
-
+      rabbitmq:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "Booking-service"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://bookingDb:3306/bookingDb"
+      SPRING_APPLICATION_NAME: booking-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookingdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
     deploy:
       resources:
         limits:
           memory: 700m
-
-
-    networks:
-      - microservices
-
-  catagary:
-    image: "harintharan/saloon-catagary-service:v1"
-    ports:
-      - "8084:8084"
-    healthcheck:
-      test: "curl --fail --silent catagary:8084/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: catagary
-    depends_on:
-      categorydb:
-        condition: service_healthy
-
-    environment:
-      SPRING_APPLICATION_NAME: "category-service"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://categorydb:3306/categorydb"
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-
-
-    networks:
-      - microservices
-
+    networks: [ microservices ]
 
   payment:
-    image: "harintharan/saloon-payment-service:v1"
+    image: "harintharan/saloon-payment-service:v2"
+    container_name: payment
     ports:
       - "8087:8087"
-    healthcheck:
-      test: "curl --fail --silent payment:8084/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: payment
     depends_on:
-      paymentDB:
+      mysql:
         condition: service_healthy
-
+      rabbitmq:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "payment-microservice"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://paymentDB:3306/paymentDB"
+      SPRING_APPLICATION_NAME: payment-microservice
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/paymentdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
     deploy:
       resources:
         limits:
           memory: 700m
+    networks: [ microservices ]
 
 
-    networks:
-      - microservices
+  notification:
+    image: "harintharan/saloon-notifications-service:v2"
+    container_name: notification
+    ports:
+      - "9001:9001"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: notifications-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/notificationdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks: [ microservices ]
 
 
-  saloon:
-    image: "harintharan/saloon-service:v1"
+
+
+
+  category:
+    image: "harintharan/saloon-catagary-service:v2"
+    container_name: category
+    ports:
+      - "8084:8084"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: category-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/categorydb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks: [ microservices ]
+
+
+
+
+
+
+
+  saloon-service:
+    image: "harintharan/saloon-service:v2"
+    container_name: saloon-service
     ports:
       - "8083:8083"
-    healthcheck:
-      test: "curl --fail --silent saloon:8083/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: saloon
     depends_on:
-      saloonDb:
+      mysql:
         condition: service_healthy
-
+      eurekaserver:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "saloon-service"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://saloonDb:3306/saloonDb"
+      SPRING_APPLICATION_NAME: saloon-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saloonDb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
     deploy:
       resources:
         limits:
           memory: 700m
+    networks: [ microservices ]
 
 
-    networks:
-      - microservices
-
-
-  serviceoffering:
-    image: "harintharan/saloon-service-offering:v1"
+  service-offering:
+    image: "harintharan/saloon-service-offering:v2"
+    container_name: service-offering
     ports:
       - "8085:8085"
-    healthcheck:
-      test: "curl --fail --silent serviceoffering:8085/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: serviceoffering
     depends_on:
-      saloonServiceDB:
+      mysql:
         condition: service_healthy
-
+      eurekaserver:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "service-offering"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://saloonServiceDB:3306/saloonServiceDB"
+      SPRING_APPLICATION_NAME: service-offering
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saloonServiceDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
     deploy:
       resources:
         limits:
           memory: 700m
+    networks: [ microservices ]
 
 
-    networks:
-      - microservices
 
-  gatewayserver:
-    image: "harintharan/saloon-gateway-server:v1"
+
+
+  # ----------------- API Gateway -----------------
+  gateway:
+    image: "harintharan/saloon-gateway-server:v2"
+    container_name: gateway
     ports:
       - "8089:8089"
-    healthcheck:
-      test: "curl --fail --silent gatewayserver:8089/actuator/health/readiness | grep UP || exist 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    container_name: gatewayserver
-
-
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      keycloak:
+        condition: service_started   # 👈 only wait for container to start, not health
     environment:
-      SPRING_APPLICATION_NAME: "gateway-server"
+      SPRING_APPLICATION_NAME: gateway-service
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8088/eureka/
-
-
-
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: master
+      KEYCLOAK_RESOURCE: gateway-client
     deploy:
       resources:
         limits:
           memory: 700m
-
-
     networks:
       - microservices
 
-networks:
-    microservices:
-      driver: "bridge"
 
+# ----------------- Volumes -----------------
+volumes:
+  mysql_data:
+  rabbitmq_data:
+  keycloak_data:
+
+
+# ----------------- Network -----------------
+networks:
+  microservices:
+    driver: bridge

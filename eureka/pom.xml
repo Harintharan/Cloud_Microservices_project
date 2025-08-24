@@ -63,7 +63,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>harintharan/saloon-eureka-server:v1</image>
+						<image>harintharan/saloon-eureka-server:v2</image>
 					</to>
 				</configuration>
 			</plugin>

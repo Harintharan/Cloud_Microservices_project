@@ -52,11 +52,12 @@ eureka:
     service-url:
       defaultZone: "http://localhost:8088/eureka/"
 
-razorpay:
-  api:
-    key: "rzp_test_us_1kARZSA09Qu4CB"
-    secret: "p8Euasu4euFDUWw57JiE6bgm"
-
-stripe:
-  api:
-    key: "key"
+#razorpay:
+#  api:
+#    key: "rzp_test_us_1kARZSA09Qu4CB"
+#    secret: "p8Euasu4euFDUWw57JiE6bgm"
+#
+#stripe:
+#  api:
+#    publishable: "pk_test_51RxXncGelJ4HBHnI9cVvQ6mcRq9dyB438BCOAOjzB8OKjA6iOBJrk4G392zkcVZJRDS4DVaga4jbDWKyqe5U9fPi00olStqVmH"
+#    secret: ""

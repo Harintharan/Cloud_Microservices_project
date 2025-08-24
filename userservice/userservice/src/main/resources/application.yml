@@ -44,3 +44,31 @@ eureka:
   client:
     service-url:
       defaultZone: "http://localhost:8088/eureka/"
+
+
+#security:
+#  keycloak:
+#    base-url: http://localhost:3333
+#    realm: master
+#    admin-realm: master
+#    client-id: saloon-booking-client
+#    client-secret: "klZdJDCzRjzCtDyD0kA6brtvtwja5ZmA"   # OK for local only
+#    admin-username: admin
+#    admin-password: admin
+
+
+
+
+
+# 🔑 Keycloak configuration
+#keycloak:
+#  base-url: http://keycloak:8080
+#  realm: master
+#  client-id: saloon-booking-client
+#  client-secret: klZdJDCzRjzCtDyD0kA6brtvtwja5ZmA
+#  admin:
+#    username: admin
+#    password: admin
+#  grant-type: password
+#  scope: openid email profile
+

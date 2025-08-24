@@ -107,7 +107,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>harintharan/saloon-service:v1</image>
+						<image>harintharan/saloon-service:v2</image>
 					</to>
 				</configuration>
 			</plugin>

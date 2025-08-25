@@ -13,7 +13,8 @@ jobs:
         with:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
-          key: ${{ secrets.AZURE_VM_SSH_KEY }}   # private key content
+          key: ${{ secrets.AZURE_VM_SSH_KEY }}
           port: 22
           script: |
-            echo "Hello, world!" > hello.txt
+            echo "GM" > hello.txt
+            git pull

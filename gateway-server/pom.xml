@@ -58,6 +58,11 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
 
 		<dependency>
@@ -98,7 +103,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>harintharan/saloon-gateway-server:v2</image>
+						<image>harintharan/saloon-gateway-server:v3</image>
 					</to>
 				</configuration>
 			</plugin>

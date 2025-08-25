@@ -43,6 +43,11 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -116,7 +121,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>harintharan/saloon-notifications-service:v2</image>
+						<image>harintharan/saloon-notifications-service:v3</image>
 					</to>
 				</configuration>
 			</plugin>

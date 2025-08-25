@@ -18,15 +18,57 @@
 #  admin:
 #    username: adminnan
 #    password: admin
+#...........................................................................................
+#
+#spring:
+#  application:
+#    name: user-service
+#
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/saloonuser?createDatabaseIfNotExist=true
+#    username: root
+#    password: HA1256ri#
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#
+#server:
+#  port: 8082
+#
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#
+#  client:
+#    service-url:
+#      defaultZone: "http://localhost:8088/eureka/"
+#
+#
+#security:
+#  keycloak:
+#    base-url: ${KEYCLOAK_BASE_URL}
+#    realm: master
+#    client-id: ${KEYCLOAK_CLIENT_ID}
+#    client-secret: ${KEYCLOAK_CLIENT_SECRET}
+#    admin:
+#      username: ${KEYCLOAK_ADMIN_USERNAME}
+#      password: ${KEYCLOAK_ADMIN_PASSWORD}
+#    grant-type: password
+#    scope: openid email profile
+#
+
 
 spring:
   application:
     name: user-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/saloonuser?createDatabaseIfNotExist=true
-    username: root
-    password: HA1256ri#
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/userdb?createDatabaseIfNotExist=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:HA1256ri#}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -35,40 +77,32 @@ spring:
     show-sql: true
 
 server:
-  port: 8082
+  port: ${SERVER_PORT:8082}
 
 eureka:
   instance:
     prefer-ip-address: true
-
   client:
     service-url:
-      defaultZone: "http://localhost:8088/eureka/"
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8088/eureka/}
+
+security:
+  keycloak:
+    base-url: ${KEYCLOAK_BASE_URL:http://localhost:3333}
+    realm: master
+    client-id: ${KEYCLOAK_CLIENT_ID}
+    client-secret: ${KEYCLOAK_CLIENT_SECRET}
+    admin:
+      username: ${KEYCLOAK_ADMIN_USERNAME}
+      password: ${KEYCLOAK_ADMIN_PASSWORD}
+    grant_type: password
+    scope: openid email profile
 
 
-#security:
-#  keycloak:
-#    base-url: http://localhost:3333
-#    realm: master
-#    admin-realm: master
-#    client-id: saloon-booking-client
-#    client-secret: "klZdJDCzRjzCtDyD0kA6brtvtwja5ZmA"   # OK for local only
-#    admin-username: admin
-#    admin-password: admin
 
 
 
 
 
-# 🔑 Keycloak configuration
-#keycloak:
-#  base-url: http://keycloak:8080
-#  realm: master
-#  client-id: saloon-booking-client
-#  client-secret: klZdJDCzRjzCtDyD0kA6brtvtwja5ZmA
-#  admin:
-#    username: admin
-#    password: admin
-#  grant-type: password
-#  scope: openid email profile
+
 

@@ -68,6 +68,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -104,7 +110,7 @@
                 <version>3.4.4</version>
                 <configuration>
                     <to>
-                        <image>harintharan/saloon-service-offering:v2</image>
+                        <image>harintharan/saloon-service-offering:v3</image>
                     </to>
                 </configuration>
             </plugin>

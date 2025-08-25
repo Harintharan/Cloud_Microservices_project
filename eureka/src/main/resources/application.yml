@@ -1,5 +1,20 @@
+#server:
+#  port: 8088
+#
+#spring:
+#  application:
+#    name: eureka-server
+#
+#eureka:
+#  instance:
+#    hostname: localhost
+#
+#  client:
+#    fetch-registry: false
+#    register-with-eureka: false
+
 server:
-  port: 8088
+  port: ${SERVER_PORT:8088}
 
 spring:
   application:
@@ -7,14 +22,12 @@ spring:
 
 eureka:
   instance:
-    hostname: localhost
+    hostname: ${EUREKA_HOSTNAME:localhost}
 
   client:
     fetch-registry: false
     register-with-eureka: false
 
-#      service-url:
-#        defaultZone: "http://${eureka.instance.hostname}:${server.port}/eureka/"
 
 
 

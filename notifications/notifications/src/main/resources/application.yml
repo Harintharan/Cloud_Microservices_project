@@ -1,3 +1,37 @@
+#
+#
+#
+#spring:
+#  application:
+#    name: notifications-service
+#
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/notification?createDatabaseIfNotExist=true
+#    username: root
+#    password: "HA1256ri#"
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#
+#  rabbitmq:
+#    port: 5672
+#    host: localhost
+#    username: guest
+#    password: guest
+#
+#
+#server:
+#  port: 9001
+#
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    service-url:
+#      defaultZone: "http://localhost:8088/eureka/"
 
 
 
@@ -6,9 +40,9 @@ spring:
     name: notifications-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/notification?createDatabaseIfNotExist=true
-    username: root
-    password: "HA1256ri#"
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/notificationdb?createDatabaseIfNotExist=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:HA1256ri#}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -17,18 +51,17 @@ spring:
     show-sql: true
 
   rabbitmq:
-    port: 5672
-    host: localhost
-    username: guest
-    password: guest
-
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
 
 server:
-  port: 9001
+  port: ${SERVER_PORT:9001}
 
 eureka:
   instance:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: "http://localhost:8088/eureka/"
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8088/eureka/}

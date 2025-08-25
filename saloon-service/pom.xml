@@ -48,6 +48,12 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
 
 
 
@@ -107,7 +113,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>harintharan/saloon-service:v2</image>
+						<image>harintharan/saloon-service:v3</image>
 					</to>
 				</configuration>
 			</plugin>

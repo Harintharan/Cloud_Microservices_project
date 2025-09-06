@@ -51,6 +51,7 @@ jobs:
      - name: Build and push paymentMicroserviceforsaloonProject
        run: |
          cd paymentMicroserviceforsaloonProject
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/payment:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/payment:${{ github.sha }}
@@ -58,6 +59,7 @@ jobs:
      - name: Build and push ReviewMicroservice
        run: |
          cd ReviewMicroservice
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/review:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/review:${{ github.sha }}
@@ -65,6 +67,7 @@ jobs:
      - name: Build and push saloon-service
        run: |
          cd saloon-service
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/saloon:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/saloon:${{ github.sha }}
@@ -72,6 +75,7 @@ jobs:
      - name: Build and push service-offering
        run: |
          cd service-offering
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/service-offering:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/service-offering:${{ github.sha }}
@@ -79,6 +83,7 @@ jobs:
      - name: Build and push Bookingservice
        run: |
          cd Bookingservice
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/booking:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/booking:${{ github.sha }}
@@ -86,6 +91,7 @@ jobs:
      - name: Build and push categary-service
        run: |
          cd categary-service
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/categary:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/categary:${{ github.sha }}
@@ -93,6 +99,7 @@ jobs:
      - name: Build and push notifications
        run: |
          cd notifications
+         chmod +x mvnw
          ./mvnw clean package -DskipTests
          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/notifications:${{ github.sha }} .
          docker push ${{ secrets.DOCKERHUB_USERNAME }}/notifications:${{ github.sha }}

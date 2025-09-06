@@ -15,8 +15,8 @@
         <module name="gateway-server" />
         <module name="categary-service" />
         <module name="ReviewMicroservice" />
-        <module name="notifications" />
         <module name="service-offering" />
+        <module name="notifications" />
       </profile>
     </annotationProcessing>
   </component>

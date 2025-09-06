@@ -10,15 +10,17 @@
     <file url="file://$PROJECT_DIR$/eureka/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gateway-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gateway-server/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/notifications/notifications/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/notifications/notifications/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notification/notifications/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notification/notifications/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notifications/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/paymentMicroserviceforsaloonProject/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/paymentMicroserviceforsaloonProject/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/saloon-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/saloon-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-offering/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-offering/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/userservice/userservice/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/userservice/userservice/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/userservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/userservices/userservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/userservices/userservice/src/main/resources" charset="UTF-8" />
   </component>
 </project>

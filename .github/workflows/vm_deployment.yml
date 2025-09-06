@@ -17,4 +17,4 @@ jobs:
           port: 22
           script: |
             echo "GM" > hello.txt
-#            git pull
+            git pull

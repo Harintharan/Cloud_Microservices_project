@@ -1,0 +1,9 @@
+target
+.git
+.idea
+.vscode
+Dockerfile
+**/*.iml
+**/.DS_Store
+README.md
+
